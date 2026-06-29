@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  loadbalancer:
+    build: ./loadbalancer
+    image: loadbalancer:latest
+    container_name: loadbalancer
+    ports:
+      - "5000:5000"           # Only the LB is exposed to the outside world
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    privileged: true
+    environment:
+      N: 3                    # Start with 3 server replicas
+    networks:
+      net1:
+        aliases:
+          - loadbalancer
+
+networks:
+  net1:
+    driver: bridge
